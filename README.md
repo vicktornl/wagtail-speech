@@ -33,6 +33,8 @@ manage.py makemigrations
 manage.py migrate
 ```
 
+We assume you already have setup credentials for [boto3](http://boto3.readthedocs.io/en/latest/guide/configuration.html).
+
 ## Usage
 
 Use the ``SynthesizeSpeechMixin`` on pages you want to be rendered as audio streams.
