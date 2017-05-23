@@ -33,7 +33,6 @@ def synthesize_speech_from_page(request, page):
         )
         if 'AudioStream' in response and hasattr(page, 'audio_stream'):
             with closing(response['AudioStream']) as stream:
-                output = '/tmp/%s.mp3' % page.slug
                 try:
                     temp_dir = gettempdir()
                     temp_file = NamedTemporaryFile(dir=temp_dir)
