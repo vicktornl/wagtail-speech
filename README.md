@@ -99,5 +99,5 @@ For proper pronunciations of your text and have more control over breaks, etc. w
 ## Roadmap
 
 * [ ] Solution for limitations (max. 1500 chars / 5 min audio cut-off.)
-* [ ] Support for choosing text/ssml
-* [ ] Add real-time streaming support
+* [ ] Add real-time streaming
+* [ ] Celery support
