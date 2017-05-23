@@ -94,10 +94,10 @@ For other values please read the [documentation](http://boto3.readthedocs.io/en/
 
 ## Tips
 
-For proper pronunciations of your text and have more control over breaks, etc. we strongly advice you to read more about the supported tags of the (Speech Synthesis Markup Language)[http://docs.aws.amazon.com/polly/latest/dg/ssml.html] in Polly.
+For proper pronunciations of your text and have more control over breaks, etc. we strongly advice you to read more about the supported tags of the [Speech Synthesis Markup Language](http://docs.aws.amazon.com/polly/latest/dg/ssml.html) in Polly.
 
 ## Roadmap
 
-[ ] Solution for limitations (max. 1500 chars / 5 min audio cut-off.)
-[ ] Support for choosing text/ssml
-[ ] Add real-time streaming support
+* [ ] Solution for limitations (max. 1500 chars / 5 min audio cut-off.)
+* [ ] Support for choosing text/ssml
+* [ ] Add real-time streaming support
