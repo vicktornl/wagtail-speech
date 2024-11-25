@@ -2,13 +2,6 @@
 
 Turn Wagtail pages into lifelike speech using Amazon Polly.
 
-[![Build Status](https://travis-ci.org/moorinteractive/wagtail-speech.svg?branch=master)](https://travis-ci.org/moorinteractive/wagtail-speech)
-[![Coverage Status](https://coveralls.io/repos/github/moorinteractive/wagtail-speech/badge.svg?branch=master)](https://coveralls.io/github/moorinteractive/wagtail-speech?branch=master)
-
-* Issues: [https://github.com/moorinteractive/wagtail-speech/issues](https://github.com/moorinteractive/wagtail-speech/issues)
-* Testing: [https://travis-ci.org/moorinteractive/wagtail-speech](https://travis-ci.org/moorinteractive/wagtail-speech)
-* Coverage: [https://coveralls.io/github/moorinteractive/wagtail-speech](https://coveralls.io/github/moorinteractive/wagtail-speech)
-
 ## Installation
 
 Install the package
@@ -37,22 +30,20 @@ We assume you already have setup credentials for [boto3](http://boto3.readthedoc
 
 ## Usage
 
-Use the ``SynthesizeSpeechMixin`` on pages you want to be rendered as audio streams.
-These pages triggers the ``synthesize_speech_from_page`` method when they are edited via the Wagtail admin interface.
-You can find your saved audio stream on the ``page.audio_stream`` property (by default a low bitrate .mp3 file).
+Use the ``TextToSpeechMixin`` on pages you want to be rendered as audio streams.
 
 ```python
-from wagtail.wagtailcore.models import Page
-from wagtailspeech.models import SynthesizeSpeechMixin
+from wagtail.models import Page
+from wagtailspeech.models import TextToSpeechMixin
 
-class HomePage(SynthesizeSpeechMixin, Page):
-    def get_speech_text(self):
+class HomePage(TextToSpeechMixin, Page):
+    def get_tts_context(self, request):
         return self.title
 ```
 
 You are completely free how to provide the text to be renderend.
 In most cases you probably also want to provide values from a ``StreamField``.
-For this use case we provided a ``get_speech_text_from_stream_field`` method which calls ``get_speech_text`` (if present) on your blocks and concats the content of it with breaks between them.
+For this use case we provided a ``get_tts_context_from_stream_field`` method which calls ``get_tts_context`` (if present) on your blocks and concats the content of it with breaks between them.
 
 ```python
 class ExampleBlock(blocks.StructBlock):
@@ -63,12 +54,12 @@ class ExampleBlock(blocks.StructBlock):
     class Meta:
         template = 'blocks/cta.html'
 
-    def get_speech_text(self, value):
+    def get_tts_context(self, value):
         return "%s<break strength=\"x-strong\"/>%s" % (
             force_text(value.get('text')),
             force_text(value.get('button_label')))
 
-class ExamplePage(SynthesizeSpeechMixin, Page):
+class ExamplePage(TextToSpeechMixin, Page):
     content = StreamField([
         ('example', ExampleBlock()),
     ])
@@ -77,9 +68,9 @@ class ExamplePage(SynthesizeSpeechMixin, Page):
         StreamFieldPanel('content'),
     ]
 
-    def get_speech_text(self, request):
-        from wagtailspeech.utils import get_speech_text_from_stream_field
-        return get_speech_text_from_stream_field(request, self.main_content)
+    def get_tts_context(self, request):
+        from wagtailspeech.utils import get_tts_context_from_stream_field
+        return get_tts_context_from_stream_field(request, self.main_content)
 ```
 
 ## Settings
@@ -87,6 +78,8 @@ class ExamplePage(SynthesizeSpeechMixin, Page):
 Available settings:
 
 ```python
+WAGTAIL_SPEECH_ENGINE = 'standard'
+WAGTAIL_SPEECH_LANGUAGE_CODE = 'en-EN'
 WAGTAIL_SPEECH_OUTPUT_FORMAT = 'mp3'
 WAGTAIL_SPEECH_SAMPLE_RATE = '8000'
 WAGTAIL_SPEECH_VOICE_ID = 'Joey'
@@ -97,9 +90,3 @@ For other values please read the [documentation](http://boto3.readthedocs.io/en/
 ## Tips
 
 For proper pronunciations of your text and have more control over breaks, etc. we strongly advice you to read more about the supported tags of the [Speech Synthesis Markup Language](http://docs.aws.amazon.com/polly/latest/dg/ssml.html) in Polly.
-
-## Roadmap
-
-* [ ] Solution for limitations (max. 1500 chars / 5 min audio cut-off.)
-* [ ] Add real-time streaming
-* [ ] Celery support
